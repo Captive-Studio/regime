@@ -1,0 +1,48 @@
+#!/usr/bin/env ruby
+require 'yaml'
+require 'pathname'
+
+# Initialize and load configuration
+config         = YAML::load File.open 'regime.yml' rescue nil
+config       ||= Hash.new
+too_long_files = []
+default_config = {
+  "authorized_line_count" =>    100,
+  "checked_extensions" =>       [ 'rb', 'coffee' ],
+  "whitelist" =>                [],
+  "tolareate_too_long_files" => false
+}
+
+# Where no configuration is set, override with the default config
+default_config.keys.each { |key| config[key] ||= default_config[key] }
+
+
+# Count the lines for each files
+file_matchers  = config['checked_extensions'].collect { |ext| "**/*.#{ext}" }
+line_counts    = `wc -l #{file_matchers.join ' '} | sed '$d'`.split "\n"
+line_counts.each do |line_count|
+  count, filename = line_count.split
+  pathname        = Pathname.new filename
+
+  # Skip the file if it matches the whitelist
+  if config['whitelist'].include?(pathname.basename) or
+     config['whitelist'].include?(filename)
+    next
+  end
+
+  # Add to the too_long_files if the line count is too big
+  if count.to_i > config['authorized_line_count']
+    too_long_files << { filename: filename, count: count }
+  end
+end
+
+# Outputs the result
+puts "There are #{too_long_files.count} files exceeeding the authorized lines count"
+too_long_files.each do |too_long_file|
+  puts "-- #{too_long_file[:filename]} -> #{too_long_file[:count]}"
+end
+
+# Return with an exit status of 42 if the conditions to accept the build aren't met
+if too_long_files.count > 0 and config['tolerate_too_long_files'] != true
+  exit 42
+end
