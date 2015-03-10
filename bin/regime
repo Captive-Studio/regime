@@ -16,6 +16,8 @@ default_config = {
 # Where no configuration is set, override with the default config
 default_config.keys.each { |key| config[key] ||= default_config[key] }
 
+# Collect whitelisted files
+whitelist = Dir.glob config['whitelist']
 
 # Count the lines for each files
 file_matchers  = config['checked_extensions'].collect { |ext| "**/*.#{ext}" }
@@ -26,7 +28,8 @@ line_counts.each do |line_count|
 
   # Skip the file if it matches the whitelist
   if config['whitelist'].include?(pathname.basename) or
-     config['whitelist'].include?(filename)
+     config['whitelist'].include?(filename) or
+     whitelist.include?(pathname.to_s)
     next
   end
 
