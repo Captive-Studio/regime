@@ -19,7 +19,7 @@ default_config.keys.each { |key| config[key] ||= default_config[key] }
 
 # Count the lines for each files
 file_matchers  = config['checked_extensions'].collect { |ext| "**/*.#{ext}" }
-line_counts    = `wc -l #{file_matchers.join ' '} | sed '$d'`.split "\n"
+line_counts    = `wc -l #{(Dir.glob file_matchers).join ' '} | sed '$d'`.split "\n"
 line_counts.each do |line_count|
   count, filename = line_count.split
   pathname        = Pathname.new filename
