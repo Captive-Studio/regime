@@ -17,7 +17,7 @@ checked_extensions:
 # the whitelist contains files that should be ignored by regime.
 whitelist:
   - db/schema.rb # ignores db/schema.rb for a rails project
-  - spec/ # ignores all files in the spec folders
+  - spec/**/*    # ignores all files in the spec folders
   
 # tolerate_too_long_files specifies whether the regime command should raise an error when a file goes beyond the line limit. Default is false.
 tolerate_too_long_files: false
