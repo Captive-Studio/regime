@@ -2,6 +2,21 @@
 Regime is a ruby gem that checks the length of your source code files. It allows you to limit the length of your files, by reporting which files are going beyond the limit.
 Just run the `regime` command at your 
 
+## Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
+group :development do
+  gem 'regime', github: 'Captive-Studio/regime'
+end
+```
+
+And then execute:
+
+    $ bundle
+
+
 ## Configuration
 If the directory in which you run `regime` contains a `regime.yml` file, it will be used to configure regime.
 Here's a sample of `regime.yml` file:
