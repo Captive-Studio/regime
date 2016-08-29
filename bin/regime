@@ -6,8 +6,10 @@ require 'pathname'
 config         = YAML::load File.open 'regime.yml' rescue nil
 config       ||= Hash.new
 too_long_files = []
+almost_too_long_files = []
 default_config = {
   "authorized_line_count" =>    100,
+  "warning_line_count" =>    80,
   "checked_extensions" =>       [ 'rb', 'coffee' ],
   "whitelist" =>                [],
   "tolareate_too_long_files" => false
@@ -34,8 +36,11 @@ line_counts.each do |line_count|
   end
 
   # Add to the too_long_files if the line count is too big
+  # Add to the almost_too_long_files if the line count is almost too big
   if count.to_i > config['authorized_line_count']
     too_long_files << { filename: filename, count: count }
+  elsif count.to_i > config['warning_line_count']
+    almost_too_long_files << { filename: filename, count: count }
   end
 end
 
@@ -43,6 +48,10 @@ end
 puts "There are #{too_long_files.count} files exceeeding the authorized lines count"
 too_long_files.each do |too_long_file|
   puts "-- #{too_long_file[:filename]} -> #{too_long_file[:count]}"
+end
+puts "There are #{almost_too_long_files.count} files wich will exceeeding the authorized lines count"
+almost_too_long_files.each do |almost_too_long_file|
+  puts "-- #{almost_too_long_file[:filename]} -> #{almost_too_long_file[:count]}"
 end
 
 # Return with an exit status of 42 if the conditions to accept the build aren't met

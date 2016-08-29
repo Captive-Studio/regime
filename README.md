@@ -25,6 +25,9 @@ Here's a sample of `regime.yml` file:
 # authorized_line_count sets the limit of lines for each files. Default is a hundred.
 authorized_line_count: 100
 
+# warning_line_count sets a warning of lines for each files. Default is 80.
+warning_line_count: 80
+
 # checked_extensions lists the type of files that regime checks. Default settings only checks `rb` files.
 checked_extensions:
   - rb
