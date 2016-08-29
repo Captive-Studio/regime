@@ -49,7 +49,7 @@ puts "There are #{too_long_files.count} files exceeeding the authorized lines co
 too_long_files.each do |too_long_file|
   puts "-- #{too_long_file[:filename]} -> #{too_long_file[:count]}"
 end
-puts "There are #{almost_too_long_files.count} files wich will exceeeding the authorized lines count"
+puts "There are #{almost_too_long_files.count} files who have more than #{config['warning_line_count']} lines"
 almost_too_long_files.each do |almost_too_long_file|
   puts "-- #{almost_too_long_file[:filename]} -> #{almost_too_long_file[:count]}"
 end
